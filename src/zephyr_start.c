@@ -28,6 +28,7 @@
 #include "zephyr_getchar.h"
 #include <shell/shell.h>
 #include <init.h>
+#include <power.h>
 
 #include <fs.h>
 #include <ff.h>
@@ -113,6 +114,9 @@ no_script:
 }
 
 void main(void) {
+	sys_pm_ctrl_disable_state(SYS_POWER_STATE_SLEEP_1);
+	sys_pm_ctrl_disable_state(SYS_POWER_STATE_SLEEP_2);
+	sys_pm_ctrl_disable_state(SYS_POWER_STATE_SLEEP_3);
 	mp_running = run_user_script("/NAND:/main.py");
 }
 
