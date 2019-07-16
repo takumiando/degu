@@ -61,7 +61,7 @@ STATIC mp_obj_t coap_dump(void) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(coap_dump_obj, coap_dump);
 
-#define MAX_COAP_MSG_LEN 256
+#define MAX_COAP_MSG_LEN 1152
 #define COAP_TYPE_CON 0 //Confirmable
 #define COAP_TYPE_NCON 1 //non-Confirmable
 #define COAP_TYPE_ACK 2 //Acknowledgement
@@ -129,6 +129,7 @@ STATIC mp_obj_t coap_request_get(mp_obj_t self_in, mp_obj_t path) {
 	u8_t *data;
 	const u8_t *payload;
 	u16_t payload_len;
+	vstr_t vstr;
 
 	data = (u8_t *)m_malloc(MAX_COAP_MSG_LEN);
 	if (!data) {
@@ -172,8 +173,11 @@ STATIC mp_obj_t coap_request_get(mp_obj_t self_in, mp_obj_t path) {
 
 	payload = coap_packet_get_payload(&reply, &payload_len);
 
+	vstr_init_len(&vstr, payload_len);
+	strcpy(vstr.buf, payload);
+
 	m_free(data);
-	return mp_obj_new_str(payload, payload_len);
+	return mp_obj_new_str_from_vstr(&mp_type_str, &vstr);
 
 err:
 	m_free(data);
