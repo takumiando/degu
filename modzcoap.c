@@ -58,27 +58,35 @@ STATIC mp_obj_t coap_client_make_new(const mp_obj_type_t *type, size_t n_args, s
 
 STATIC mp_obj_t coap_request_post(mp_obj_t self_in, mp_obj_t path, mp_obj_t payload) {
 	mp_obj_coap_t *client = self_in;
-	u8_t *str_code = zcoap_request_post(client->sock,
+	static u8_t str_code[5];
+	u8_t code = zcoap_request_post(client->sock,
 					(u8_t *)mp_obj_str_get_str(path),
 					(u8_t *)mp_obj_str_get_str(payload));
 
-	if (str_code != NULL)
+	if (code) {
+		sprintf(str_code, "%d.%02d", code/32, code%32);
 		return mp_obj_new_str(str_code, strlen(str_code));
-	else
+	}
+	else {
 		return mp_const_none;
+	}
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_3(coap_request_post_obj, coap_request_post);
 
 STATIC mp_obj_t coap_request_put(mp_obj_t self_in, mp_obj_t path, mp_obj_t payload) {
 	mp_obj_coap_t *client = self_in;
-	u8_t *str_code = zcoap_request_put(client->sock,
+	static u8_t str_code[5];
+	u8_t code = zcoap_request_put(client->sock,
 					(u8_t *)mp_obj_str_get_str(path),
 					(u8_t *)mp_obj_str_get_str(payload));
 
-	if (str_code != NULL)
+	if (code) {
+		sprintf(str_code, "%d.%02d", code/32, code%32);
 		return mp_obj_new_str(str_code, strlen(str_code));
-	else
+	}
+	else {
 		return mp_const_none;
+	}
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_3(coap_request_put_obj, coap_request_put);
 
