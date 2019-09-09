@@ -1,6 +1,6 @@
 [submodule "zephyr"]
 	path = zephyr
-	url = https://github.com/open-degu/zephyr.git
+	url = https://github.com/takumiando/zephyr.git
 [submodule "openthread"]
 	path = openthread
 	url = https://github.com/openthread/openthread.git
